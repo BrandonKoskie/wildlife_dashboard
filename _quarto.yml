@@ -1,5 +1,22 @@
 project:
-  title: "wildlife_dashboard"
+  type: website
 
-editor: visual
+website:
+  title: "Hawaiʻi Wildlife Strandings Dashboard"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: monk-seals.qmd
+        text: Monk Seals
+      - href: sea-turtles.qmd
+        text: Sea Turtles
+      - href: data-cleaning.qmd
+        text: Data Cleaning
 
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-fold: true

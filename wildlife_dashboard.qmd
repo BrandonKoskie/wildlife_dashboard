@@ -2,10 +2,150 @@
 title: "wildlife_dashboard"
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(leaflet)
+```
 
 ```{r}
-1 + 1
+monk_injuries <- monk_injuries %>%
+  mutate(
+    date_final = mdy(date),
+    year = year(date_final)
+  )
+```
+
+```{r}
+injuries_per_year <- monk_injuries %>%
+  group_by(year) %>%
+  summarise(n_injuries = n())
+```
+
+```{r}
+ggplot(injuries_per_year, aes(x = year, y = n_injuries)) +
+  geom_line(color = "steelblue", linewidth = 1.2) +
+  geom_point(color = "darkred", size = 3) +
+  labs(
+    title = "Timeline of Monk Seal Injuries",
+    x = "Year",
+    y = "Number of Injuries"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+# Extract sex
+monk_injuries <- monk_injuries %>%
+  mutate(sex = case_when(
+    str_detect(seal_size_sex_id, "M") ~ "Male",
+    str_detect(seal_size_sex_id, "F") ~ "Female",
+    TRUE ~ "Unknown"
+  ))
+
+# Count + percentage
+sex_summary <- monk_injuries %>%
+  group_by(sex) %>%
+  summarise(n = n()) %>%
+  mutate(
+    percent = round(n / sum(n) * 100, 1),
+    label = paste0(sex, "\n", n, " seals\n", percent, "%")
+  )
+
+# Pie chart
+ggplot(sex_summary, aes(x = "", y = percent, fill = sex)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_label(
+    aes(label = label),
+    position = position_stack(vjust = 0.5),
+    color = "black",
+    fill = "white",
+    size = 4,
+    label.size = 0
+  ) +
+  labs(title = "Sex Distribution of Monk Seal Injuries") +
+  theme_void() +
+  scale_fill_manual(values = c(
+    "Male" = "lightblue",
+    "Female" = "pink",
+    "Unknown" = "gray"
+  ))
+
+```
+
+```{r}
+monk_injuries <- monk_injuries %>%
+  mutate(island = case_when(
+    str_detect(location, regex("Kauai", ignore_case = TRUE)) ~ "Kauai",
+    str_detect(location, regex("Oahu", ignore_case = TRUE)) ~ "Oahu",
+    str_detect(location, regex("Molokai", ignore_case = TRUE)) ~ "Molokai",
+    str_detect(location, regex("Lanai", ignore_case = TRUE)) ~ "Lanai",
+    str_detect(location, regex("Maui", ignore_case = TRUE)) ~ "Maui",
+    str_detect(location, regex("Hawaii|Big Island|Mahukona|Puako|Lapakahi|South Point", ignore_case = TRUE)) ~ "Hawaii",
+    
+    # NWHI
+    str_detect(location, regex("Kure", ignore_case = TRUE)) ~ "Kure",
+    str_detect(location, regex("Laysan", ignore_case = TRUE)) ~ "Laysan",
+    str_detect(location, regex("Necker", ignore_case = TRUE)) ~ "Necker",
+    str_detect(location, regex("FFS|French Frigate", ignore_case = TRUE)) ~ "French Frigate Shoals",
+    str_detect(location, regex("Kahoolawe", ignore_case = TRUE)) ~ "Kahoolawe",
+    
+    # Pelagic / offshore / unknown island
+    str_detect(location, regex("pelagic|location TBD|unknown", ignore_case = TRUE)) ~ "Offshore / Unknown",
+    
+    TRUE ~ "Unknown"
+  ))
+
+```
+
+```{r}
+#Island latitude/longitude lookup table
+island_coords <- tribble(
+  ~island,                     ~lat,      ~lon,
+  "Kauai",                     22.0964,  -159.5261,
+  "Oahu",                      21.4389,  -158.0001,
+  "Molokai",                   21.144,   -157.022,
+  "Lanai",                     20.827,   -156.925,
+  "Maui",                      20.7984,  -156.3319,
+  "Hawaii",                    19.5429,  -155.6659,
+  "Kure",                      28.4167,  -178.3333,
+  "Laysan",                    25.7667,  -171.7333,
+  "Necker",                    23.5667,  -164.7000,
+  "French Frigate Shoals",     23.8667,  -166.2833,
+  "Kahoolawe",                 20.5469,  -156.6019,
+  "Offshore / Unknown",        NA,       NA,
+  "Unknown",                   NA,       NA
+)
+
+#Aggregate total injuries per island
+island_summary <- monk_injuries %>%
+  group_by(island) %>%
+  summarise(total_injuries_island = n(), .groups = "drop")
+
+#Join coordinates into dataset
+monk_map <- monk_injuries %>%
+  left_join(island_coords, by = "island") %>%
+  left_join(island_summary, by = "island") %>%
+  filter(!is.na(lat))  # drop unknown island points
+
+#Build the interactive map
+leaflet(monk_map) %>%
+  addTiles() %>%
+  addCircleMarkers(
+    lng = ~lon,
+    lat = ~lat,
+    radius = 5,
+    color = "red",
+    stroke = TRUE,
+    fillOpacity = 0.7,
+    popup = ~paste0(
+      "<b>Island:</b> ", island, "<br>",
+      "<b>Total injuries:</b> ", total_injuries_island
+    )
+  ) %>%
+  addLegend("bottomright", colors = "red", labels = "Injury Reports")
 ```

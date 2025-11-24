@@ -1,0 +1,53 @@
+body {
+  background-color: #f5f7fa;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* HEADERS */
+h1, h2, h3, h4 {
+  color: #0a2f5c;
+  font-weight: 600;
+}
+
+/* VALUE BOXES */
+.value-box {
+  padding: 18px;
+  margin: 10px 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.value-box h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.value-box p {
+  margin: 4px 0 0;
+  font-size: 18px;
+}
+
+/* TABLES */
+table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* NAVBAR */
+.navbar {
+  background-color: #002b5c !important;
+}
+
+.navbar a {
+  color: white !important;
+}
+
+/* CARDS / PANELS */
+.panel {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
