@@ -1,8 +1,10 @@
 ---
-title: "wildlife_dashboard"
+title: "Monk Seal Injury Dashboard"
+Author: "Brandon Koskie"
+format: dashboard
 ---
 
-```{r}
+```{r, echo=FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
