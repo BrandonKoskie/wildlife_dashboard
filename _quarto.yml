@@ -1,22 +1,24 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "Hawaiʻi Wildlife Strandings Dashboard"
+  # title: "Monk Seal Inicident Dashboard"
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      - href: monk-seals.qmd
-        text: Monk Seals
-      - href: sea-turtles.qmd
-        text: Sea Turtles
-      - href: data-cleaning.qmd
-        text: Data Cleaning
+    right:
+      - icon: github
+        href: "https://brandonkoskie.github.io/"
+        text: "My Website"
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - darkly
+      - brand
     css: styles.css
     toc: true
-    code-fold: true
+
+editor: visual
+

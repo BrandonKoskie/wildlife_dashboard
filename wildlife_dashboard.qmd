@@ -5,9 +5,29 @@ title: "wildlife_dashboard"
 ```{r}
 library(ggplot2)
 library(dplyr)
+library(tidyverse)
 library(lubridate)
+library(janitor)
 library(stringr)
 library(leaflet)
+```
+
+```{r}
+# Load your dataset (adjust path if needed)
+monk_injuries <- read_csv("data/monk_injuries.csv")
+```
+
+```{r}
+monk_injuries <- monk_injuries %>% clean_names()  # converts all column names to snake_case
+```
+
+```{r}
+monk_injuries <- monk_injuries %>%
+  mutate(
+    hooknet = factor(hooknet),
+    seriousness_for_sar = factor(seriousness_for_sar),
+    death = factor(death)
+  )
 ```
 
 ```{r}
