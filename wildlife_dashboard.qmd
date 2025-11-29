@@ -14,16 +14,16 @@ library(stringr)
 library(leaflet)
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Load your dataset (adjust path if needed)
 monk_injuries <- read_csv("data/monk_injuries.csv")
 ```
 
-```{r}
+```{r, echo=FALSE}
 monk_injuries <- monk_injuries %>% clean_names()  # converts all column names to snake_case
 ```
 
-```{r}
+```{r, echo=FALSE}
 monk_injuries <- monk_injuries %>%
   mutate(
     hooknet = factor(hooknet),
@@ -32,7 +32,7 @@ monk_injuries <- monk_injuries %>%
   )
 ```
 
-```{r}
+```{r, echo=FALSE}
 monk_injuries <- monk_injuries %>%
   mutate(
     date_final = mdy(date),
@@ -40,26 +40,29 @@ monk_injuries <- monk_injuries %>%
   )
 ```
 
-```{r}
+```{r, echo=FALSE}
 injuries_per_year <- monk_injuries %>%
   group_by(year) %>%
   summarise(n_injuries = n())
 ```
 
-```{r}
-ggplot(injuries_per_year, aes(x = year, y = n_injuries)) +
-  geom_line(color = "steelblue", linewidth = 1.2) +
-  geom_point(color = "darkred", size = 3) +
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+injuries_per_year <- monk_injuries %>%
+  count(year)
+
+ggplot(injuries_per_year, aes(year, n)) +
+  geom_line(linewidth = 1.2, color = "steelblue") +
+  geom_point(size = 3, color = "darkred") +
   labs(
     title = "Timeline of Monk Seal Injuries",
     x = "Year",
     y = "Number of Injuries"
   ) +
-  theme_minimal()
-
+  theme_minimal(base_size = 14)
 ```
 
-```{r}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 # Extract sex
 monk_injuries <- monk_injuries %>%
   mutate(sex = case_when(
@@ -96,10 +99,9 @@ ggplot(sex_summary, aes(x = "", y = percent, fill = sex)) +
     "Female" = "pink",
     "Unknown" = "gray"
   ))
-
 ```
 
-```{r}
+```{r, echo=FALSE}
 monk_injuries <- monk_injuries %>%
   mutate(island = case_when(
     str_detect(location, regex("Kauai", ignore_case = TRUE)) ~ "Kauai",
@@ -124,7 +126,8 @@ monk_injuries <- monk_injuries %>%
 
 ```
 
-```{r}
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 #Island latitude/longitude lookup table
 island_coords <- tribble(
   ~island,                     ~lat,      ~lon,
