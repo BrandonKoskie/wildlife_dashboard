@@ -47,6 +47,8 @@ injuries_per_year <- monk_injuries %>%
 ```
 
 
+### Timeline of Monk Seal Injuries {width=0.5, height=450}
+
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
 injuries_per_year <- monk_injuries %>%
   count(year)
@@ -61,6 +63,7 @@ ggplot(injuries_per_year, aes(year, n)) +
   ) +
   theme_minimal(base_size = 14)
 ```
+### Sex Distribution {width=0.5, height=450}
 
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
 # Extract sex
@@ -126,6 +129,7 @@ monk_injuries <- monk_injuries %>%
 
 ```
 
+### Map of Injury Locations {width=0.7, height=700}
 
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
 #Island latitude/longitude lookup table
