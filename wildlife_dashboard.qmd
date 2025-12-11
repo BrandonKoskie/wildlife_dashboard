@@ -3,6 +3,9 @@ title: "Monk Seal Injury Dashboard"
 Author: "Brandon Koskie"
 format: dashboard
 ---
+The Hawaiian Monk Seal Entanglement dataset documents reported cases where monk seals became hooked or entangled in fishing gear across the Hawaiian Islands. Each record includes when and where the incident occurred, the type of gear involved, injury severity, and information about the affected seal. The dataset is used to track threats from fishing activity, identify high-risk locations, and support conservation and response efforts by NOAA and partner agencies.
+
+Data link: <https://catalog.data.gov/dataset/hmsrp-hawaiian-monk-seal-entanglement-data1> 
 
 ```{r, echo=FALSE}
 library(ggplot2)
@@ -66,7 +69,7 @@ ggplot(injuries_per_year, aes(year, n)) +
 ### Sex Distribution {width=0.5, height=450}
 
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
-# Extract sex
+# Extract sex (your original rules)
 monk_injuries <- monk_injuries %>%
   mutate(sex = case_when(
     str_detect(seal_size_sex_id, "M") ~ "Male",
@@ -74,24 +77,30 @@ monk_injuries <- monk_injuries %>%
     TRUE ~ "Unknown"
   ))
 
-# Count + percentage
+# Count & percent
 sex_summary <- monk_injuries %>%
   group_by(sex) %>%
   summarise(n = n()) %>%
   mutate(
     percent = round(n / sum(n) * 100, 1),
-    label = paste0(sex, "\n", n, " seals\n", percent, "%")
+    percent_label = paste0(percent, "%")
   )
 
-# Pie chart
+# Keep correct slice order
+sex_summary$sex <- factor(
+  sex_summary$sex,
+  levels = c("Male", "Female", "Unknown")
+)
+
+# Pie chart with ONLY percentages
 ggplot(sex_summary, aes(x = "", y = percent, fill = sex)) +
   geom_col(width = 1, color = "white") +
   coord_polar(theta = "y") +
   geom_label(
-    aes(label = label),
+    aes(label = percent_label),
     position = position_stack(vjust = 0.5),
-    color = "black",
     fill = "white",
+    color = "black",
     size = 4,
     label.size = 0
   ) +
