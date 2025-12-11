@@ -3,7 +3,7 @@ title: "Monk Seal Injury Dashboard"
 Author: "Brandon Koskie"
 format: dashboard
 ---
-The Hawaiian Monk Seal Entanglement dataset documents reported cases where monk seals became hooked or entangled in fishing gear across the Hawaiian Islands. Each record includes when and where the incident occurred, the type of gear involved, injury severity, and information about the affected seal. The dataset is used to track threats from fishing activity, identify high-risk locations, and support conservation and response efforts by NOAA and partner agencies.
+The Hawaiian Monk Seal Entanglement data set documents reported cases where monk seals became hooked or entangled in fishing gear across the Hawaiian Islands. Each record includes when and where the incident occurred, the type of gear involved, injury severity, and information about the affected seal. The data set is used to track threats from fishing activity, identify high-risk locations, and support conservation and response efforts by NOAA and partner agencies.
 
 Data link: <https://catalog.data.gov/dataset/hmsrp-hawaiian-monk-seal-entanglement-data1> 
 
